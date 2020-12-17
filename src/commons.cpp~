@@ -1,0 +1,48 @@
+#include "commons.hpp"
+
+
+Coords Coords::getNeighbour(int direction)
+{
+    direction = direction % 6;
+    
+    switch(direction)
+    {
+	case 0: return Coords(r+1, q+1); break; // north-east
+	case 1: return Coords(r+1, q  ); break; // east
+	case 2: return Coords(r  , q-1); break; // south-east
+	case 3: return Coords(r-1, q-1); break; // south-west
+	case 4: return Coords(r-1, q  ); break; // west
+	case 5: return Coords(r  , q+1); break; // north-west
+    }
+}
+
+bool operator<(const Coords& a, const Coords& b)
+{
+    if(a.q == b.q) return (a.r < b.r);
+    else return (a.q < b.q);
+}
+
+bool inBounds(const Coords& a, int width, int height)
+{
+    if(a.q < 0 || a.q >= height) return false;
+    if(a.r + a.q/2 < 0 || a.r + a.q/2 >= width) return false;
+    return true;
+}
+
+int distance(const Coords& a, const Coords& b)
+{
+    return std::max(std::abs(a.r - b.r), std::abs(a.q - b.q));
+}
+
+int modulo(int a, int b)
+{
+    if(a < 0) a += (-a/b+1) * b;
+    return a % b;
+}
+    
+int randomI(int min, int max)
+{
+    if(min >= max) return min;
+    return rand() % (max - min + 1) + min;
+}
+
