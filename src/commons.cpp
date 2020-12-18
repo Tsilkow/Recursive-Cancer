@@ -53,6 +53,14 @@ int modulo(int a, int b)
     if(a < 0) a += (-a/b+1) * b;
     return a % b;
 }
+
+float modulo(float a, float b)
+{
+    while(a >= b) a -= b;
+    while(a <  0) a += b;
+
+    return a;
+}
     
 int randomI(int min, int max)
 {
@@ -64,4 +72,33 @@ void printColor(sf::Color toPrint, bool enter)
 {
     std::cout << "(" << toPrint.r << ", " << toPrint.g << ", " << toPrint.b << ")";
     if(enter) std::cout << "\n";
+}
+
+float colorValue(float point)
+{
+    point = modulo(point, 1.f);
+    
+    if(point <= 1.f/6.f) return point*6.f;
+    if(point <= 3.f/6.f) return 1.f;
+    if(point <= 4.f/6.f) return (4.f/6.f - point)*6.f;
+    return 0.f;
+}
+
+sf::Color colorFromRange(float point)
+{
+    return sf::Color(std::round(255.f * colorValue(point + 2.f/6.f)),
+		     std::round(255.f * colorValue(point          )),
+		     std::round(255.f * colorValue(point - 2.f/6.f)));
+}
+
+std::vector<sf::Color> generatePalette(int colorTotal)
+{
+    std::vector<sf::Color> result;
+
+    for(int i = 0; i < colorTotal; ++i)
+    {
+	result.emplace_back(colorFromRange((float)i/(float)colorTotal));
+    }
+
+    return result;
 }

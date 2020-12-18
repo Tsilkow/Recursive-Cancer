@@ -7,6 +7,11 @@ Board::Board(std::shared_ptr<BoardSettings>& bSetts):
     m_data = std::vector< std::vector<int> >(m_bSetts->dimensions.x,
 					     std::vector<int>(m_bSetts->dimensions.y, -2));
 
+    for(int i = 0; i < m_bSetts->start.size(); ++i)
+    {
+	atCoords(m_data, m_bSetts->start[i]) = -1;
+    }
+
     for(int x = 0; x < m_bSetts->dimensions.x; ++x)
     {
 	for(int y = 0; y < m_bSetts->dimensions.y; ++y)
@@ -19,7 +24,8 @@ Board::Board(std::shared_ptr<BoardSettings>& bSetts):
 
 	    for(int i = 0; i < 4; ++i)
 	    {
-		m_depiction.emplace_back(curr[i], m_bSetts->deadColor);
+		if(m_data[x][y] == -2) m_depiction.emplace_back(curr[i], m_bSetts->emptyColor);
+		else m_depiction.emplace_back(curr[i], m_bSetts->deadColor);
 	    }
 	}
     }

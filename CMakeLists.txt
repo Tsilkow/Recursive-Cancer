@@ -9,7 +9,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 include_directories("inc")
 set(SOURCES
 	src/commons.cpp
-	src/board.cpp)
+	src/board.cpp
+	src/simulation.cpp)
 
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 add_library(Modules SHARED ${SOURCES})

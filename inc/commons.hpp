@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <cmath>
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -41,3 +42,9 @@ bool inBounds(const Coords& a, int width, int height);
 int randomI(int min, int max);
 
 void printColor(sf::Color toPrint, bool enter=true);
+
+float colorValue(float point);
+
+sf::Color colorFromRange(float point);
+    
+std::vector<sf::Color> generatePalette(int colorTotal);

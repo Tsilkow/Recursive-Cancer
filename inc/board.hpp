@@ -19,6 +19,7 @@ struct BoardSettings
     sf::Color emptyColor;
     sf::Color deadColor;
     sf::Color activeColor;
+    std::vector<Coords> start;
 };
 
 class Board
