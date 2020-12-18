@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 include_directories("inc")
 set(SOURCES
 	src/commons.cpp
+	src/growth.cpp
 	src/board.cpp
 	src/simulation.cpp)
 

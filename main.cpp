@@ -21,32 +21,42 @@ int main()
 {
     srand(time(NULL));
 
-    Coords temp(24, 24);
+    GrowthSettings gSetts =
+    {
+	1.f // airPerSynthesis
+    };
+    shared_ptr<GrowthSettings> shr_gSetts = make_shared<GrowthSettings>(gSetts);
+    
+    std::vector<Coords> temp;
     BoardSettings bSetts =
     {
         {50, 50},               // dimensions
 	{16, 16},                   // tileSize
         sf::Color(  0,   0,   0), // emptyColor
 	sf::Color( 64,  64,  64), // deadColor
-	sf::Color(255, 255, 255), // activeColor
-	{temp.getNeighbour(0),
-	 temp.getNeighbour(1),
-	 temp.getNeighbour(2),
-	 temp.getNeighbour(3),
-	 temp.getNeighbour(4),
-	 temp.getNeighbour(5)}
+	sf::Color(255, 255, 255)  // activeColor
     };
     shared_ptr<BoardSettings> shr_bSetts = make_shared<BoardSettings>(bSetts);
 
+    for(int x = 0; x < shr_bSetts->dimensions.x; ++x)
+    {
+	for(int y = 0; y < shr_bSetts->dimensions.y; ++y)
+	{
+	    temp.emplace_back(x, y);
+	}
+    }
+
     SimulationSettings sSetts =
     {
+	shr_gSetts, // gSetts
 	shr_bSetts, // bSetts
-	16          // colorTotal
+	16,         // colorTotal
+	temp        // start
     };
     shared_ptr<SimulationSettings> shr_sSetts = make_shared<SimulationSettings>(sSetts);
 
     sf::RenderWindow window(sf::VideoMode(808, 808), "Recursive Cancer");
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(1);
     
     sf::View actionView(sf::Vector2f(404.f, 404.f), sf::Vector2f(808, 808));
     window.setView(actionView);
@@ -60,6 +70,7 @@ int main()
 
     while(window.isOpen())
     {
+	cout << ticksPassed << endl;
 	sf::Event event;
 	
 	window.clear();
@@ -111,7 +122,7 @@ int main()
 	switch(currState)
 	{	
 	    case GameState::Simulation:
-		
+
 	        simulation.tick();
 
 		simulation.draw(window);

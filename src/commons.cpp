@@ -7,7 +7,7 @@ void Coords::print(bool enter)
     if(enter) std::cout << "\n";
 }
 
-Coords Coords::getNeighbour(int direction)
+Coords Coords::getNeighbour(int direction) const 
 {
     direction = modulo(direction, 6);
 
@@ -66,6 +66,24 @@ int randomI(int min, int max)
 {
     if(min >= max) return min;
     return rand() % (max - min + 1) + min;
+}
+
+std::vector<int> randomSequence(int min, int max, int length)
+{
+    std::vector<int> allPossibilities;
+    std::vector<int> result;
+    int element;
+    for(int i=min; i<=max; ++i)
+    {
+	allPossibilities.push_back(i);
+    }
+    for(int i=0; i<length; ++i)
+    {
+	element = randomI(0, allPossibilities.size()-1);
+	result.push_back(allPossibilities[element]);
+	allPossibilities.erase(allPossibilities.begin() + element);
+    }
+    return result;
 }
 
 void printColor(sf::Color toPrint, bool enter)

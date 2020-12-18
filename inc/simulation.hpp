@@ -3,21 +3,34 @@
 #include <iostream>
 #include <vector>
 
+#include "commons.hpp"
 #include "board.hpp"
+#include "growth.hpp"
 
 
 struct SimulationSettings
 {
+    std::shared_ptr<GrowthSettings> gSetts;
     std::shared_ptr<BoardSettings> bSetts;
     int colorTotal;
+    std::vector<Coords> start;
 };
 
 class Simulation
 {
     private:
     std::shared_ptr<SimulationSettings> m_sSetts;
-    //std::vector<Growth> m_growths;
+    std::map<int, Growth> m_growths;
+    std::vector< std::vector<int> > m_control;
+    // -2 = empty (non-growable)
+    // -1 = dead
+    //  x = organism x, where x > 0
     Board m_board;
+    int m_nextId;
+
+    void setCell(Coords at, int to);
+
+    void newCancer(Coords at);
     
     public:
     Simulation(std::shared_ptr<SimulationSettings>& sSetts);

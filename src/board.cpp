@@ -4,14 +4,6 @@
 Board::Board(std::shared_ptr<BoardSettings>& bSetts):
     m_bSetts(bSetts)
 {
-    m_data = std::vector< std::vector<int> >(m_bSetts->dimensions.x,
-					     std::vector<int>(m_bSetts->dimensions.y, -2));
-
-    for(int i = 0; i < m_bSetts->start.size(); ++i)
-    {
-	atCoords(m_data, m_bSetts->start[i]) = -1;
-    }
-
     for(int x = 0; x < m_bSetts->dimensions.x; ++x)
     {
 	for(int y = 0; y < m_bSetts->dimensions.y; ++y)
@@ -24,8 +16,7 @@ Board::Board(std::shared_ptr<BoardSettings>& bSetts):
 
 	    for(int i = 0; i < 4; ++i)
 	    {
-		if(m_data[x][y] == -2) m_depiction.emplace_back(curr[i], m_bSetts->emptyColor);
-		else m_depiction.emplace_back(curr[i], m_bSetts->deadColor);
+		m_depiction.emplace_back(curr[i], m_bSetts->emptyColor);
 	    }
 	}
     }
@@ -33,27 +24,32 @@ Board::Board(std::shared_ptr<BoardSettings>& bSetts):
 
 void Board::update()
 {
-    for(int i = 0; i < m_toRecolor.size(); ++i)
+    for(int i = 0; i < m_toRecolorNow.size(); ++i)
     {
-	int index = (m_toRecolor[i].x * m_bSetts->dimensions.y + m_toRecolor[i].y)*4;
+	int index = (m_toRecolorNow[i].first.x * m_bSetts->dimensions.y + m_toRecolorNow[i].first.y)*4;
+	sf::Color color;
+	if     (m_toRecolorNow[i].second == -2) color = m_bSetts->emptyColor;
+	else if(m_toRecolorNow[i].second == -1) color = m_bSetts->deadColor;
+	else if(m_toRecolorNow[i].second >=  0) color = m_growthColors[m_toRecolorNow[i].second];
+	
 	for(int j = 0; j < 4; ++j)
 	{
-	    m_depiction[index + j].color = m_growthColors[atCoords(m_data, m_toRecolor[i])];
+	    m_depiction[index + j].color = color;
 	}
     }
     
-    m_toRecolor = m_toUpdate;
+    m_toRecolorNow = m_toRecolorNext;
 	
-    for(int i = 0; i < m_toUpdate.size(); ++i)
+    for(int i = 0; i < m_toRecolorNext.size(); ++i)
     {
-	int index = (m_toUpdate[i].x * m_bSetts->dimensions.y + m_toUpdate[i].y)*4;
+	int index = (m_toRecolorNext[i].first.x * m_bSetts->dimensions.y + m_toRecolorNext[i].first.y)*4;
 	for(int j = 0; j < 4; ++j)
 	{
 	    m_depiction[index + j].color = m_bSetts->activeColor;
 	}
     }
 
-    m_toUpdate.clear();
+    m_toRecolorNext.clear();
 }
 
 bool Board::addColor(int id, sf::Color color)
@@ -84,7 +80,7 @@ bool Board::addColor(int id, sf::Color color)
 
 bool Board::change(Coords at, int id)
 {
-    if(m_growthColors.find(id) == m_growthColors.end())
+    if(id >= 0 && m_growthColors.find(id) == m_growthColors.end())
     {
 	std::cout << "No color assigned for id " << id << "! Data at ";
 	at.print(false);
@@ -100,8 +96,7 @@ bool Board::change(Coords at, int id)
 	return false;
     }
 
-    atCoords(m_data, at) = id;
-    m_toUpdate.emplace_back(at);
+    m_toRecolorNext.emplace_back(at, id);
     return true;
 }
 

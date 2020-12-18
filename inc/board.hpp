@@ -19,21 +19,16 @@ struct BoardSettings
     sf::Color emptyColor;
     sf::Color deadColor;
     sf::Color activeColor;
-    std::vector<Coords> start;
 };
 
 class Board
 {
     private:
     std::shared_ptr<BoardSettings> m_bSetts;
-    std::vector< std::vector<int> > m_data;
-    // -2 = empty (non-growable)
-    // -1 = dead
-    //  x = organism x, where x > 0
     std::vector<sf::Vertex> m_depiction;
     std::map<int, sf::Color> m_growthColors;
-    std::vector<Coords> m_toUpdate;
-    std::vector<Coords> m_toRecolor;
+    std::vector<std::pair<Coords, int>> m_toRecolorNow;
+    std::vector<std::pair<Coords, int>> m_toRecolorNext;
 
     // updates m_depiction
     void update();
