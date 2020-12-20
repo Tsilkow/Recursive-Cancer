@@ -24,6 +24,7 @@ Board::Board(std::shared_ptr<BoardSettings>& bSetts):
 
 void Board::update()
 {
+    /*
     for(int i = 0; i < m_toRecolorNow.size(); ++i)
     {
 	int index = (m_toRecolorNow[i].first.x * m_bSetts->dimensions.y + m_toRecolorNow[i].first.y)*4;
@@ -38,14 +39,18 @@ void Board::update()
 	}
     }
     
-    m_toRecolorNow = m_toRecolorNext;
+    m_toRecolorNow = m_toRecolorNext;*/
 	
     for(int i = 0; i < m_toRecolorNext.size(); ++i)
     {
 	int index = (m_toRecolorNext[i].first.x * m_bSetts->dimensions.y + m_toRecolorNext[i].first.y)*4;
+	sf::Color color;
+	if     (m_toRecolorNext[i].second == -2) color = m_bSetts->emptyColor;
+	else if(m_toRecolorNext[i].second == -1) color = m_bSetts->deadColor;
+	else if(m_toRecolorNext[i].second >=  0) color = m_growthColors[m_toRecolorNext[i].second];
 	for(int j = 0; j < 4; ++j)
 	{
-	    m_depiction[index + j].color = m_bSetts->activeColor;
+	    m_depiction[index + j].color = color;//m_bSetts->activeColor;
 	}
     }
 

@@ -23,15 +23,15 @@ int main()
 
     GrowthSettings gSetts =
     {
-	1.f // airPerSynthesis
+	6.f // airPerSynthesis
     };
     shared_ptr<GrowthSettings> shr_gSetts = make_shared<GrowthSettings>(gSetts);
     
     std::vector<Coords> temp;
     BoardSettings bSetts =
     {
-        {50, 50},               // dimensions
-	{16, 16},                   // tileSize
+        {100, 100},               // dimensions
+	{8, 8},                   // tileSize
         sf::Color(  0,   0,   0), // emptyColor
 	sf::Color( 64,  64,  64), // deadColor
 	sf::Color(255, 255, 255)  // activeColor
@@ -56,7 +56,7 @@ int main()
     shared_ptr<SimulationSettings> shr_sSetts = make_shared<SimulationSettings>(sSetts);
 
     sf::RenderWindow window(sf::VideoMode(808, 808), "Recursive Cancer");
-    window.setFramerateLimit(1);
+    window.setFramerateLimit(6);
     
     sf::View actionView(sf::Vector2f(404.f, 404.f), sf::Vector2f(808, 808));
     window.setView(actionView);
@@ -123,7 +123,7 @@ int main()
 	{	
 	    case GameState::Simulation:
 
-	        simulation.tick();
+	        if(!simulation.tick()) return 0;
 
 		simulation.draw(window);
 		break;

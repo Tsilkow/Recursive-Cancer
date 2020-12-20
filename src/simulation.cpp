@@ -21,6 +21,7 @@ Simulation::Simulation(std::shared_ptr<SimulationSettings>& sSetts):
     }
 
     newCancer(m_sSetts->start[randomI(0, m_sSetts->start.size()-1)]);
+    newCancer(m_sSetts->start[randomI(0, m_sSetts->start.size()-1)]);
 
     m_board.tick();
 }
@@ -58,29 +59,44 @@ bool Simulation::tick()
 
 	for(auto jt = edge.begin(); jt != edge.end(); ++jt)
 	{
-	    int value = atCoords(m_control, *jt);
+	    if(inBounds(*jt, m_sSetts->bSetts->dimensions.x, m_sSetts->bSetts->dimensions.y))
+	    {
+		int value = atCoords(m_control, *jt);
 
-	    if      (value == -2) empty.insert(*jt);
-	    else if (value == -1)  dead.insert(*jt);
-	    else if (value >=  0) enemy.insert(*jt);
+		if      (value == -2) empty.insert(*jt);
+		else if (value == -1)  dead.insert(*jt);
+		else if (value >=  0) enemy.insert(*jt);
+	    }
 	}
 	plan = it->second.tick(empty, dead, enemy);
 
 	for(auto jt = plan.begin(); jt != plan.end(); ++jt)
 	{
-	    if(expansions.find(*jt) != expansions.end()) expansions.erase(expansions.find(*jt));
-	    else expansions.insert(std::make_pair(*jt, it->first));
+	    expansions.insert(std::make_pair(*jt, it->first));
 	}
     }
 
     for(auto it = expansions.begin(); it != expansions.end(); ++it)
     {
-	m_growths.find(it->second)->second.grow(it->first);
-	setCell(it->first, it->second);
+	if(atCoords(m_control, it->first) < 0 ||
+	   !m_growths.find(atCoords(m_control, it->first))->second.isDuplicating(it->first))
+	{
+	    if(atCoords(m_control, it->first) >= 0)
+	    {
+		if(!m_growths.find(atCoords(m_control, it->first))->second.shrink(it->first))
+		{
+		    std::cout << "!ERROR! Simulation representation does not match the on in Growth!\n";
+		}
+	    }
+	    m_growths.find(it->second)->second.grow(it->first);
+	    setCell(it->first, it->second);
+	}
     }
     
     m_board.tick();
 
+    if(expansions.size() == 0) return false;
+    
     return true;
 }
 

@@ -19,7 +19,7 @@ struct Coords
     Coords() {; }
     Coords(int _x, int _y): x(_x), y(_y) {; }
 
-    void print(bool enter=true);
+    void print(bool enter=true) const;
     Coords getNeighbour(int direction) const;
 };
 
