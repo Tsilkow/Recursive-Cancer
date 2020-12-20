@@ -23,6 +23,7 @@ class Growth
     int m_size;
     int m_breathingLength;
     float m_fluorescence;
+    bool m_shrinked = true;
     
     public:
     Growth(std::shared_ptr<GrowthSettings>& gSetts, Coords heart);
@@ -30,6 +31,8 @@ class Growth
     bool isControlled(const Coords at);
 
     bool isDuplicating(const Coords at);
+
+    std::set<Coords> checkConnectedness();
 
     std::set<Coords> tick(std::set<Coords> empty, std::set<Coords> dead, std::set<Coords> enemy);
 

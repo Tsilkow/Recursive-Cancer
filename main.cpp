@@ -30,8 +30,8 @@ int main()
     std::vector<Coords> temp;
     BoardSettings bSetts =
     {
-        {100, 100},               // dimensions
-	{8, 8},                   // tileSize
+        {400, 400},               // dimensions
+	{2, 2},                   // tileSize
         sf::Color(  0,   0,   0), // emptyColor
 	sf::Color( 64,  64,  64), // deadColor
 	sf::Color(255, 255, 255)  // activeColor
@@ -56,7 +56,7 @@ int main()
     shared_ptr<SimulationSettings> shr_sSetts = make_shared<SimulationSettings>(sSetts);
 
     sf::RenderWindow window(sf::VideoMode(808, 808), "Recursive Cancer");
-    window.setFramerateLimit(6);
+    window.setFramerateLimit(60);
     
     sf::View actionView(sf::Vector2f(404.f, 404.f), sf::Vector2f(808, 808));
     window.setView(actionView);

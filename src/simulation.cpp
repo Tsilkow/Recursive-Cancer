@@ -93,6 +93,17 @@ bool Simulation::tick()
 	}
     }
     
+    for(auto it = m_growths.begin(); it != m_growths.end(); ++it)
+    {
+	std::set<Coords> temp = it->second.checkConnectedness();
+
+	for(auto jt = temp.begin(); jt != temp.end(); ++jt)
+	{
+	    if(atCoords(m_control, *jt) != it->first) std::cout << "DUDE, DON'T DELETE SOMETHING THAT'S NOT YOURS\n";
+	    setCell(*jt, -1);
+	}
+    }
+    
     m_board.tick();
 
     if(expansions.size() == 0) return false;
