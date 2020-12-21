@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <unordered_set>
 
 #include "commons.hpp"
 
@@ -17,9 +18,9 @@ class Growth
     private:
     std::shared_ptr<GrowthSettings> m_gSetts;
     Coords m_heart;
-    std::set<Coords> m_territory;
-    std::set<Coords> m_duplicating;
-    std::set<Coords> m_edge;
+    std::unordered_set<Coords> m_territory;
+    std::unordered_set<Coords> m_duplicating;
+    std::unordered_set<Coords> m_edge;
     int m_size;
     int m_breathingLength;
     float m_fluorescence;
@@ -32,9 +33,11 @@ class Growth
 
     bool isDuplicating(const Coords at);
 
-    std::set<Coords> checkConnectedness();
+    std::unordered_set<Coords> checkConnectedness();
 
-    std::set<Coords> tick(std::set<Coords> empty, std::set<Coords> dead, std::set<Coords> enemy);
+    std::unordered_set<Coords> tick(std::unordered_set<Coords> empty,
+				    std::unordered_set<Coords> dead,
+				    std::unordered_set<Coords> enemy);
 
     void grow(Coords toAdd);
 
@@ -42,5 +45,5 @@ class Growth
 
     const Coords& getHeart() {return m_heart; }
     const float& getFluorescence() {return m_fluorescence; }
-    const std::set<Coords>& getEdge() {return m_edge; }
+    const std::unordered_set<Coords>& getEdge() {return m_edge; }
 };

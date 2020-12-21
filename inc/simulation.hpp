@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <vector>
+#include <unordered_set>
+#include <unordered_map>
 
 #include "commons.hpp"
 #include "board.hpp"
@@ -20,7 +22,7 @@ class Simulation
 {
     private:
     std::shared_ptr<SimulationSettings> m_sSetts;
-    std::map<int, Growth> m_growths;
+    std::unordered_map<int, Growth> m_growths;
     std::vector< std::vector<int> > m_control;
     // -2 = empty (non-growable)
     // -1 = dead

@@ -47,15 +47,15 @@ void Simulation::newCancer(Coords at)
 
 bool Simulation::tick()
 {
-    std::map<Coords, int> expansions;
+    std::unordered_map<Coords, int> expansions;
     
     for(auto it = m_growths.begin(); it != m_growths.end(); ++it)
     {
-	std::set<Coords> edge = it->second.getEdge();
-	std::set<Coords> empty;
-	std::set<Coords> dead;
-	std::set<Coords> enemy;
-	std::set<Coords> plan;
+	std::unordered_set<Coords> edge = it->second.getEdge();
+	std::unordered_set<Coords> empty;
+	std::unordered_set<Coords> dead;
+	std::unordered_set<Coords> enemy;
+	std::unordered_set<Coords> plan;
 
 	for(auto jt = edge.begin(); jt != edge.end(); ++jt)
 	{
@@ -95,7 +95,7 @@ bool Simulation::tick()
     
     for(auto it = m_growths.begin(); it != m_growths.end(); ++it)
     {
-	std::set<Coords> temp = it->second.checkConnectedness();
+	std::unordered_set<Coords> temp = it->second.checkConnectedness();
 
 	for(auto jt = temp.begin(); jt != temp.end(); ++jt)
 	{

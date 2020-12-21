@@ -21,12 +21,12 @@ bool Growth::isDuplicating(const Coords at)
     return (m_duplicating.find(at) != m_duplicating.end());
 }
 
-std::set<Coords> Growth::checkConnectedness()
+std::unordered_set<Coords> Growth::checkConnectedness()
 {
-    std::set<Coords> result;
+    std::unordered_set<Coords> result;
     std::vector<Coords> toMark;
-    std::set<Coords> visited;
-    std::vector<std::set<Coords>::iterator> toDelete;
+    std::unordered_set<Coords> visited;
+    //std::vector<std::set<Coords>::iterator> toDelete;
 
     if(m_shrinked)
     {
@@ -49,40 +49,34 @@ std::set<Coords> Growth::checkConnectedness()
 	}
 	std::cout << "AFTER MARKING\n";
 
-	for(auto it = m_territory.begin(); it != m_territory.end(); ++it)
+	for(auto it = m_territory.begin(); it != m_territory.end();)
 	{
 	    if(visited.find(*it) == visited.end())
 	    {
-		toDelete.push_back(it);
 		m_edge.insert(*it);
 		result.insert(*it);
+		it = m_territory.erase(it);
 	    }
+	    else ++it;
 	}
-
-	std::reverse(toDelete.begin(), toDelete.end());
-	for(int i = 0; i < toDelete.size(); ++i)
-	{
-	    m_territory.erase(toDelete[i]);
-	}
-	toDelete.clear();
 	std::cout << "AFTER TERRITORY\n";
     }
 
-    for(auto it = m_edge.begin(); it != m_edge.end(); ++it)
+    for(auto it = m_edge.begin(); it != m_edge.end();)
     {
+	bool toDelete = true;
 	for(int i = 0; i < 6; ++i)
 	{
 	    Coords temp = it->getNeighbour(i);
 
-	    if(isControlled(temp)) break;
-	    if(i == 5) toDelete.push_back(it);
+	    if(isControlled(temp))
+	    {
+		toDelete = false;
+		break;
+	    }
 	}
-    }
-
-    std::reverse(toDelete.begin(), toDelete.end());
-    for(int i = 0; i < toDelete.size(); ++i)
-    {
-	m_edge.erase(toDelete[i]);
+	if(toDelete) it = m_edge.erase(it);
+	else ++it;
     }
     std::cout << "AFTER EDGE\n";
     m_shrinked = false;
@@ -90,9 +84,11 @@ std::set<Coords> Growth::checkConnectedness()
     return result;
 }
 
-std::set<Coords> Growth::tick(std::set<Coords> empty, std::set<Coords> dead, std::set<Coords> enemy)
+std::unordered_set<Coords> Growth::tick(std::unordered_set<Coords> empty,
+					std::unordered_set<Coords> dead,
+					std::unordered_set<Coords> enemy)
 {
-    std::set<Coords> result;
+    std::unordered_set<Coords> result;
     int duplications = 0;
 
     m_size = m_territory.size();
@@ -138,7 +134,7 @@ std::set<Coords> Growth::tick(std::set<Coords> empty, std::set<Coords> dead, std
     }
     else if(duplications > 0)
     {
-	std::set<Coords> chosen = randomlyPick(dead, duplications);
+	std::unordered_set<Coords> chosen = randomlyPick(dead, duplications);
 	std::copy(chosen.begin(), chosen.end(), std::inserter(result, result.begin()));
     }
 
