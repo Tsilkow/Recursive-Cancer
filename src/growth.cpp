@@ -37,6 +37,7 @@ std::unordered_set<Coords> Growth::checkConnectedness()
 	{
 	    result = m_territory;
 	    m_territory.clear();
+	    m_edge.clear();
 	}
 	else
 	{

@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
     {
 	for(int y = 0; y < shr_bSetts->dimensions.y; ++y)
 	{
-	    temp.emplace_back(x, y);
+	    if(randomI(1, 100) > 1) temp.emplace_back(x, y);
 	}
     }
 
@@ -59,8 +59,8 @@ int main(int argc, char* argv[])
     {
 	shr_gSetts, // gSetts
 	shr_bSetts, // bSetts
-	64,         // colorTotal
-	41,         // colorWalk
+	256,         // colorTotal
+	33,         // colorWalk
 	16,         // cancerImmunity
 	0.003f,     // cancerProbability
 	temp        // start
@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
     shared_ptr<SimulationSettings> shr_sSetts = make_shared<SimulationSettings>(sSetts);
 
     sf::RenderWindow window(sf::VideoMode(804, 800), "Recursive Cancer");
-    window.setFramerateLimit(6);
+    window.setFramerateLimit(0);
     
     sf::View actionView(sf::Vector2f(402.f, 400.f), sf::Vector2f(804, 800));
     window.setView(actionView);
