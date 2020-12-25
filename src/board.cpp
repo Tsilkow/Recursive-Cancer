@@ -45,7 +45,8 @@ void Board::update()
     {
 	int index = (m_toRecolorNext[i].first.x * m_bSetts->dimensions.y + m_toRecolorNext[i].first.y)*4;
 	sf::Color color;
-	if     (m_toRecolorNext[i].second == -2) color = m_bSetts->emptyColor;
+	if     (m_toRecolorNext[i].second == -3) color = m_bSetts->heartColor;
+	else if(m_toRecolorNext[i].second == -2) color = m_bSetts->emptyColor;
 	else if(m_toRecolorNext[i].second == -1) color = m_bSetts->deadColor;
 	else if(m_toRecolorNext[i].second >=  0) color = m_growthColors[m_toRecolorNext[i].second];
 	for(int j = 0; j < 4; ++j)

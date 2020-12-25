@@ -33,34 +33,42 @@ std::unordered_set<Coords> Growth::checkConnectedness()
 
     if(m_shrinked)
     {
-	toMark.emplace_back(m_heart);
-	visited.insert(m_heart);
-	while(toMark.size() > 0)
+	if(!isControlled(m_heart))
 	{
-	    Coords current = toMark[0];
-	    toMark.erase(toMark.begin());
-
-	    for(int i = 0; i < 6; ++i)
+	    result = m_territory;
+	    m_territory.clear();
+	}
+	else
+	{
+	    toMark.emplace_back(m_heart);
+	    visited.insert(m_heart);
+	    while(toMark.size() > 0)
 	    {
-		Coords neighbour = current.getNeighbour(i);
-		if(isControlled(neighbour) && visited.find(neighbour) == visited.end())
+		Coords current = toMark[0];
+		toMark.erase(toMark.begin());
+
+		for(int i = 0; i < 6; ++i)
 		{
-		    toMark.push_back(neighbour);
-		    visited.insert(neighbour);
+		    Coords neighbour = current.getNeighbour(i);
+		    if(isControlled(neighbour) && visited.find(neighbour) == visited.end())
+		    {
+			toMark.push_back(neighbour);
+			visited.insert(neighbour);
+		    }
 		}
 	    }
-	}
-	//std::cout << "AFTER MARKING\n";
+	    //std::cout << "AFTER MARKING\n";
 
-	for(auto it = m_territory.begin(); it != m_territory.end();)
-	{
-	    if(visited.find(*it) == visited.end())
+	    for(auto it = m_territory.begin(); it != m_territory.end();)
 	    {
-		m_edge.insert(*it);
-		result.insert(*it);
-		it = m_territory.erase(it);
+		if(visited.find(*it) == visited.end())
+		{
+		    m_edge.insert(*it);
+		    result.insert(*it);
+		    it = m_territory.erase(it);
+		}
+		else ++it;
 	    }
-	    else ++it;
 	}
 	//std::cout << "AFTER TERRITORY\n";
     }
@@ -114,12 +122,14 @@ void Growth::breathe(std::unordered_set<Coords> empty,
 	    if(isControlled(it->getNeighbour(i))) ++m_breathingLength;
 	}
     }
+    
+    int duplications =
+	std::min(m_size, (int)std::floor(((float)m_breathingLength)/m_gSetts->airPerSynthesis));
 
     if(m_host != nullptr)
     {
-        m_host->request(m_heart,
-			m_size - std::min(m_size, std::max(1, (int)std::floor(((float)m_breathingLength)/
-									      m_gSetts->airPerSynthesis))));
+        m_host->request(m_heart, std::min(m_size - duplications,
+					  (int)(dead.size() + enemy.size() - duplications)));
     }
 }
 
@@ -128,7 +138,7 @@ void Growth::feed()
     int total = 0;
     int left = 0;
     int duplications =
-	std::min(m_size, std::max(1, (int)std::floor(((float)m_breathingLength)/m_gSetts->airPerSynthesis)));
+	std::min(m_size, (int)std::floor(((float)m_breathingLength)/m_gSetts->airPerSynthesis));
     
     for(auto it = m_requests.begin(); it != m_requests.end(); ++it)
     {
@@ -139,7 +149,7 @@ void Growth::feed()
     {
 	float ratio = ((float)duplications)/((float)total);
 	std::map<float, Coords> remainder;
-	left = total;
+	left = duplications;
 
 	for(auto it = m_requests.begin(); it != m_requests.end(); ++it)
 	{
@@ -150,12 +160,12 @@ void Growth::feed()
 
 	for(auto it = remainder.begin(); left > 0 && it != remainder.end(); ++it)
 	{
-	    m_requests.find(it->second)->second += 1;
+	    ++m_requests.find(it->second)->second;
 	    --left;
 	}
+	m_breathingLength = 0;
     }
-
-    m_breathingLength -= total * m_gSetts->airPerSynthesis;
+    else m_breathingLength -= total * m_gSetts->airPerSynthesis;
 }
 
 std::unordered_set<Coords> Growth::getPlan()
@@ -163,7 +173,7 @@ std::unordered_set<Coords> Growth::getPlan()
     std::unordered_set<Coords> result;
     
     int duplications =
-	std::min(std::max(1, (int)std::floor(((float)m_breathingLength)/m_gSetts->airPerSynthesis)), m_size);
+	std::min((int)std::floor(((float)m_breathingLength)/m_gSetts->airPerSynthesis), m_size);
     m_fluorescence = ((float)duplications)/((float)m_size);
 
     if(m_host != nullptr) duplications += m_host->getRequested(m_heart);

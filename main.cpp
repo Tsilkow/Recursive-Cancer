@@ -43,13 +43,13 @@ int main(int argc, char* argv[])
 	{8, 8},                   // tileSize
         sf::Color(  0,   0,   0), // emptyColor
 	sf::Color( 64,  64,  64), // deadColor
-	sf::Color(255, 255, 255)  // activeColor
+	sf::Color(255, 255, 255)  // heartColor
     };
     shared_ptr<BoardSettings> shr_bSetts = make_shared<BoardSettings>(bSetts);
 
-    for(int x = 1; x < shr_bSetts->dimensions.x-1; ++x)
+    for(int x = 0; x < shr_bSetts->dimensions.x; ++x)
     {
-	for(int y = 1; y < shr_bSetts->dimensions.y-1; ++y)
+	for(int y = 0; y < shr_bSetts->dimensions.y; ++y)
 	{
 	    temp.emplace_back(x, y);
 	}
@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
 	64,         // colorTotal
 	41,         // colorWalk
 	16,         // cancerImmunity
-	0.002f,     // cancerProbability
+	0.003f,     // cancerProbability
 	temp        // start
     };
     shared_ptr<SimulationSettings> shr_sSetts = make_shared<SimulationSettings>(sSetts);

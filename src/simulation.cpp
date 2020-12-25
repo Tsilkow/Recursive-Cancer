@@ -26,10 +26,11 @@ Simulation::Simulation(std::shared_ptr<SimulationSettings>& sSetts):
     m_board.tick();
 }
 
-void Simulation::setCell(Coords at, int to)
+void Simulation::setCell(Coords at, int to, bool heart)
 {
     atCoords(m_control, at) = to;
-    m_board.change(at, to);
+    if(heart) m_board.change(at, -3);
+    else m_board.change(at, to);
 }
 
 void Simulation::newCancer(Coords at, int mutatedFrom)
@@ -46,7 +47,7 @@ void Simulation::newCancer(Coords at, int mutatedFrom)
 	       std::make_pair(mutatedFrom, std::make_pair(m_nextId, m_sSetts->cancerImmunity)));
 	m_growths[m_nextId]->setHost(m_growths[mutatedFrom]);
     }
-    setCell(at, m_nextId);
+    setCell(at, m_nextId, true);
 }
 
 bool Simulation::tick()

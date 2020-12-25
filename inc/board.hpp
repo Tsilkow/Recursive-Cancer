@@ -18,7 +18,7 @@ struct BoardSettings
     sf::Vector2i tileSize;
     sf::Color emptyColor;
     sf::Color deadColor;
-    sf::Color activeColor;
+    sf::Color heartColor;
 };
 
 class Board

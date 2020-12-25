@@ -34,7 +34,7 @@ class Simulation
     Board m_board;
     int m_nextId;
 
-    void setCell(Coords at, int to);
+    void setCell(Coords at, int to, bool heart=false);
 
     void newCancer(Coords at, int mutatedFrom = -1);
     
