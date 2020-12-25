@@ -68,6 +68,11 @@ int randomI(int min, int max)
     return rand() % (max - min + 1) + min;
 }
 
+float randomF(float min, float max, float step)
+{
+    return randomI(std::round(min/step), std::round(max/step)) * step;
+}
+
 std::vector<int> randomSequence(int min, int max, int length)
 {
     std::vector<int> result;

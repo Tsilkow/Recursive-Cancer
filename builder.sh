@@ -10,7 +10,11 @@ clear
 cd build/
 cmake ..
 if eval cmake --build .; then
-    ./RecursiveCancer
+    if [ "$#" -ge 1 ]; then
+	exec "./RecursiveCancer" "$1"
+    else
+	exec "./RecursiveCancer"
+    fi
     cd ..
 else
     cd ..

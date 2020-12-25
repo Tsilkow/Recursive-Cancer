@@ -65,6 +65,8 @@ bool inBounds(const Coords& a, int width, int height);
 
 int randomI(int min, int max);
 
+float randomF(float min, float max, float step = 0.01f);
+
 std::vector<int> randomSequence(int min, int max, int length);
 
 template <typename T>
